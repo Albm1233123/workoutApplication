@@ -7,6 +7,9 @@ const workoutRoutes = require('./routes/workouts');
 // express app
 const app = express();
 
+// parse jason data from post req
+app.use(express.json());
+
 // middleware
 app.use((req, res, next) => {
     console.log(req.path, res.method)
