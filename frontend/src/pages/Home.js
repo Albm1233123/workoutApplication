@@ -43,7 +43,7 @@ const Home = () => {
     return (
         <div className="home">
             <div className="workouts">
-                {error && <p>{error}</p>}  {/* Show error message if there is one */}
+                {error && <p>{error}</p>} 
                 {workouts && workouts.map((workout) => (
                     <WorkoutDetails key={workout._id} workout={workout} onDelete={handleDelete}/>
                 ))}
