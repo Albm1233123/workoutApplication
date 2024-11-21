@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
 
 // Register new user
 const registerUser = async (req, res) => {
@@ -26,7 +27,8 @@ const registerUser = async (req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                password: user.password
+                password: user.password,
+                token: generateToken(user._id)
             });
         } else {
             res.status(400).json({message: 'Invalid user data'});
@@ -51,6 +53,7 @@ const loginUser = async (req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
+                token: generateToken(user._id)
             });
         } else {
             res.status(400).json({message: 'Invalid user name or password'});
@@ -59,5 +62,12 @@ const loginUser = async (req, res) => {
         res.status(400).json({message: error.message});
     }
 };
+
+// Generate JWT Token
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+    })
+}
 
 module.exports = {registerUser, loginUser};
