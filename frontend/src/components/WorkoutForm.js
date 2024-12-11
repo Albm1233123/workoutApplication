@@ -71,7 +71,7 @@ const WorkoutForm = ({ onAddWorkout }) => {
               className={emptyFields.includes('reps') ? 'error' : ''}
             />
 
-            <button>Add Workout</button>
+            <button className="button">Add Workout</button>
             {error && <div className="Error">{error}</div>}
         </form>
     )
