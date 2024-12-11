@@ -13,6 +13,7 @@ function App() {
         <div className="pages">
           <Routes>
             <Route path="/home" element={<Home />} />
+            <Route path="/workouts" element={<Home />} />
             <Route path="/" element={<AuthPage />} /> {/* This is the shared page */}
           </Routes>
         </div>

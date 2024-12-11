@@ -5,17 +5,28 @@ import WorkoutDetails from '../components/WorkoutDetails';
 import WorkoutForm from '../components/WorkoutForm';
 
 const Home = () => {
-    const [workouts, setWorkouts] = useState(null);
+    const [workouts, setWorkouts] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchWorkouts = async () => {
             try {
-                const response = await fetch('http://localhost:4000/api/workouts');
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:4000/api/workouts', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
 
                 if (!response.ok) {
-                    const errorText = await response.text();  // Get the response as text (if not JSON)
-                    setError(errorText);  // Set the error message
+                    if (response.status === 401) {
+                        setError('Session expired, please log in again');
+                        localStorage.removeItem('token');  // Log out the user by removing the token
+                    } else {
+                        const errorText = await response.text();  // Get the response as text (if not JSON)
+                        setError(errorText);  // Set the error message
+                    }
                     return;
                 }
                 
@@ -36,10 +47,21 @@ const Home = () => {
     };
 
     const handleDelete = (id) => {
-        // Update the workouts state by filtering out the deleted workout
-        setWorkouts(workouts.filter(workout => workout._id !== id));
+        fetch(`http://localhost:4000/api/workouts/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,  // Pass the token in the header
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Deleted workout:', data);
+            setWorkouts(workouts.filter(workout => workout._id !== id)); // Update the state after deletion
+        })
+        .catch(error => console.error('Error deleting workout:', error));
     };
-
+    
     return (
         <div className="home">
             <div className="workouts">

@@ -6,6 +6,7 @@ const getWorkouts = async (req, res) => {
     try {
         // find users own workouts (sorted by latest date created)
         const workouts = await Workout.find({user: req.user._id}).sort({createdAt: -1});
+        res.status(200).json(workouts);
     } catch (error) {
         return res.status(500).json({error: 'Server error '});
     }
@@ -60,20 +61,27 @@ const createWorkout = async (req, res) => {
 
 // delete a workout
 const deleteWorkout = async (req, res) => {
-    const { id } = req.params
-    
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such workout'})
+    const { id } = req.params;
+
+    // Validate if the ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ error: 'No such workout' });
     }
 
-    const workout = await Workout.findOneAndDelete({ _id: id, user: req.user._id});
+    try {
+        // Find the workout by ID and check if the user matches
+        const workout = await Workout.findOneAndDelete({ _id: id, user: req.user._id });
 
-    if(!workout) {
-        return res.status(400).json({error: 'No such workout'})
+        if (!workout) {
+            return res.status(400).json({ error: 'No such workout' });
+        }
+
+        res.status(200).json(workout);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
     }
+};
 
-    res.status(200).json(workout)
-}
 
 // update a workout
 const updateWorkout = async (req, res) => {

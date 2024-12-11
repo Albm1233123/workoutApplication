@@ -11,15 +11,23 @@ const WorkoutForm = ({ onAddWorkout }) => {
         e.preventDefault()
 
         const workout = {title, load, reps}
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setError('Please log in first');
+            return;  // Don't send the request if no token is found
+        }
         
         const response = await fetch('http://localhost:4000/api/workouts', {
             method: 'POST',
             body: JSON.stringify(workout),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             }
-        })
-        const json = await response.json()
+        });
+
+        const json = await response.json();
 
         if(!response.ok) {
             setError(json.error)

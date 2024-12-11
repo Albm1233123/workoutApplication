@@ -19,7 +19,7 @@ const workoutSchema = new Schema({
 
     // Reference user (so they can see they're own workouts)
     user: {
-        type: moongoose.Schema.Types.ObjectID,
+        type: mongoose.Schema.Types.ObjectID,
         ref: 'User',
         require: true
     }
