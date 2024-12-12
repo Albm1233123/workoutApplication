@@ -47,19 +47,7 @@ const Home = () => {
     };
 
     const handleDelete = (id) => {
-        fetch(`http://localhost:4000/api/workouts/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,  // Pass the token in the header
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Deleted workout:', data);
-            setWorkouts(workouts.filter(workout => workout._id !== id)); // Update the state after deletion
-        })
-        .catch(error => console.error('Error deleting workout:', error));
+        setWorkouts(prevWorkouts => prevWorkouts.filter(workout => workout._id !== id));
     };
     
     return (
