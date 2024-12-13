@@ -15,6 +15,13 @@ const workoutSchema = new Schema({
     load: {
         type: Number,
         required: true
+    },
+
+    // Reference user (so they can see they're own workouts)
+    user: {
+        type: mongoose.Schema.Types.ObjectID,
+        ref: 'User',
+        require: true
     }
 }, { timestamps: true });
 
