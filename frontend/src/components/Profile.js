@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token'); // Retrieve token from localStorage
       if (!token) {
         setError('User not authenticated. Please log in.');
-        return;
+        const timer = setTimeout(() => {
+          navigate('/');
+        }, 1000);
+        return () => clearTimeout(timer);
       }
 
       try {
@@ -42,12 +47,18 @@ const Profile = () => {
     return <div>Loading profile...</div>;
   }
 
+  const handleBack = () => {
+    navigate('/workouts');
+  }
+
   return (
     <div className="profile-page">
       <h2>User Profile</h2>
       <p><strong>First Name:</strong> {user.firstName}</p>
       <p><strong>Last Name:</strong> {user.lastName}</p>
       <p><strong>Email:</strong> {user.email}</p>
+      <br/>
+      <button className='button' onClick={handleBack}>Back</button>
     </div>
   );
 };
