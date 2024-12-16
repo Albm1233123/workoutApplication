@@ -117,3 +117,36 @@ input.error {
 .button:hover {
   background: #149c69;
 }
+
+/* Profile button */
+.profile-btn {
+  background: var(--primary);
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: #149c69;
+}
+
+/* Logout button */
+.logout-btn {
+  background: var(--primary);
+  border: 0;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-left: 1150px;
+}
+
+.logout-btn:hover {
+  background:rgb(187, 21, 21);
+}
