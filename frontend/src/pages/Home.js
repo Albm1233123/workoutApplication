@@ -8,6 +8,8 @@ import WorkoutForm from '../components/WorkoutForm';
 const Home = () => {
     const [workouts, setWorkouts] = useState([]);
     const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,6 +39,10 @@ const Home = () => {
                 
                 const json = await response.json();
                 setWorkouts(json);  // Set the workouts data if the response is JSON
+
+                // Extract all unique categories from the fetched workouts
+                const uniqueCategories = [...new Set(json.map(workout => workout.category))];
+                setCategories(uniqueCategories);
             } catch (err) {
                 setError('Error fetching workouts');
                 console.error('Fetch error:', err); 
@@ -46,24 +52,59 @@ const Home = () => {
         fetchWorkouts();
     }, []);
 
+    // Update categories dynamically after adding or deleting a workout
+    const updateCategories = (workoutsList) => {
+        const uniqueCategories = [...new Set(workoutsList.map(workout => workout.category))];
+        setCategories(uniqueCategories);
+    };
+
+    // Filter workouts based on selected category
+    const filteredWorkouts = selectedCategory
+        ? workouts.filter(workout => workout.category === selectedCategory)
+        : workouts;
 
     const handleAddWorkout = (newWorkout) => {
-        setWorkouts(prevWorkouts => [newWorkout, ...prevWorkouts]);  // Add the new workout to the beginning of the list
+        setWorkouts(prevWorkouts => {
+            const updatedWorkouts = [newWorkout, ...prevWorkouts];  // Add the new workout
+            updateCategories(updatedWorkouts);  // Update categories dynamically
+            return updatedWorkouts;
+        });
     };
 
     const handleDelete = (id) => {
-        setWorkouts(prevWorkouts => prevWorkouts.filter(workout => workout._id !== id));
+        setWorkouts(prevWorkouts => {
+            const updatedWorkouts = prevWorkouts.filter(workout => workout._id !== id);
+            updateCategories(updatedWorkouts);  // Update categories dynamically
+            return updatedWorkouts;
+        });
     };
     
     return (
         <div className="home">
-            <div className="workouts">
-                {error && <p>{error}</p>} 
-                {workouts && workouts.map((workout) => (
-                    <WorkoutDetails key={workout._id} workout={workout} onDelete={handleDelete}/>
-                ))}
+            <div className="filter">
+                {/* Dropdown for selecting category */}
+                <label htmlFor="category">Filter by Category:</label>
+                <select
+                    id="category"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                    <option value="">All</option>
+                    {categories.map((category, index) => (
+                        <option key={index} value={category}>
+                            {category}
+                        </option>
+                    ))}
+                </select>
+                <div className="workouts">
+                    {error && <p>{error}</p>}
+                    {filteredWorkouts && filteredWorkouts.map((workout) => (
+                        <WorkoutDetails key={workout._id} workout={workout} onDelete={handleDelete} />
+                    ))}
+                </div>
             </div>
-            <WorkoutForm onAddWorkout={handleAddWorkout}/>
+
+            <WorkoutForm onAddWorkout={handleAddWorkout} />
         </div>
     );
 };

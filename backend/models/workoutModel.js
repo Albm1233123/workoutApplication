@@ -15,8 +15,11 @@ const workoutSchema = new Schema({
     load: {
         type: Number,
         required: true
+    }, 
+    category: {
+        type: String,
+        unquie: true,
     },
-
     // Reference user (so they can see they're own workouts)
     user: {
         type: mongoose.Schema.Types.ObjectID,

@@ -4,13 +4,14 @@ const WorkoutForm = ({ onAddWorkout }) => {
     const [title, setTitle] = useState('');
     const [load, setLoad] = useState('');
     const [reps, setReps] = useState('');
+    const [category, setCategory] = useState('');
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const workout = {title, load, reps}
+        const workout = {title, load, reps, category}
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -37,6 +38,7 @@ const WorkoutForm = ({ onAddWorkout }) => {
             setTitle('');
             setLoad('');
             setReps('');
+            setCategory('');
             setError(null);
             setEmptyFields([])
             console.log('New Workout Added', json)
@@ -69,6 +71,14 @@ const WorkoutForm = ({ onAddWorkout }) => {
               onChange={(e) => setReps(e.target.value)}
               value={reps}
               className={emptyFields.includes('reps') ? 'error' : ''}
+            />
+            
+            <label> Category: </label>
+            <input 
+              type="text"
+              onChange={(e) => setCategory(e.target.value)}
+              value={category}
+              className={emptyFields.includes('category') ? 'error' : ''}
             />
 
             <button className="button">Add Workout</button>
