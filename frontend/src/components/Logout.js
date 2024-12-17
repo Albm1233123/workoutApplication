@@ -11,7 +11,7 @@ const LogoutButton = ({ setToken }) => {
     };
 
     return (
-        <button className="button" onClick={handleLogout} >Logout</button>
+        <button className="logout-btn" onClick={handleLogout} >Logout</button>
     );
 };
 

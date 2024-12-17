@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Components
 import WorkoutDetails from '../components/WorkoutDetails';
@@ -7,6 +8,7 @@ import WorkoutForm from '../components/WorkoutForm';
 const Home = () => {
     const [workouts, setWorkouts] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchWorkouts = async () => {
@@ -21,7 +23,10 @@ const Home = () => {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        setError('Session expired, please log in again');
+                        setError('Please log or register first.');
+                        setTimeout(() => {
+                            navigate('/')
+                        }, 1000);
                         localStorage.removeItem('token');  // Log out the user by removing the token
                     } else {
                         const errorText = await response.text();  // Get the response as text (if not JSON)
