@@ -21,9 +21,9 @@ npm install
 Create a `.env` file in the root directory and add the following environment variables:
 
 ```plaintext
-REACT_APP_API_URL=http://localhost:5000/api
+PORT=http:4000
 JWT_SECRET=your_jwt_secret_key
-DB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/<dbname>?retryWrites=true&w=majority
 ```
 
 ### Start the development server:
